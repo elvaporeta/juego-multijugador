@@ -1,40 +1,46 @@
 const express = require('express');
 const http = require('http');
-const socketIO = require('socket.io');
+const socket = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = socket(server);
+const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 
-let counter = 0;
+let players = {}; // socket.id => { name, clicks }
 
 io.on('connection', socket => {
   console.log('Jugador conectado:', socket.id);
 
-  // Enviar la lista actualizada a todos los jugadores
-  io.emit("update-player-list", players);
+  players[socket.id] = { name: '', clicks: 0 };
 
-  socket.on("disconnect", () => {
-    console.log("Jugador desconectado:", socket.id);
-    players = players.filter(id => id !== socket.id);
-    io.emit("update-player-list", players);
+  socket.on('register', name => {
+    if (players[socket.id]) {
+      players[socket.id].name = name;
+    }
+  });
 
-  // Enviar el contador actual al jugador nuevo
-  socket.emit('counter', counter);
+  socket.on('click', () => {
+    if (players[socket.id]) {
+      players[socket.id].clicks++;
+    }
+  });
 
-  // Cuando alguien hace clic
-  socket.on('increment', () => {
-    counter++;
-    io.emit('counter', counter); // actualizar a todos
+  socket.on('requestRanking', () => {
+    const ranking = Object.values(players)
+      .filter(p => p.name)
+      .sort((a, b) => b.clicks - a.clicks);
+    socket.emit('rankingData', ranking);
   });
 
   socket.on('disconnect', () => {
     console.log('Jugador desconectado:', socket.id);
+    delete players[socket.id];
   });
 });
 
-server.listen(3000, () => {
-  console.log('Servidor en http://localhost:3000');
+server.listen(PORT, () => {
+  console.log(`Servidor en http://localhost:${PORT}`);
 });

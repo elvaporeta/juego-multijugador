@@ -9,7 +9,26 @@
     <h2 id="count">0</h2>
     <button id="clickBtn">¡Haz clic!</button>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="client.js"></script>
-  </body>
+   <script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const playerList = document.getElementById("player-list");
+
+  socket.on("update-player-list", (players) => {
+    playerList.innerHTML = "";
+    players.forEach(id => {
+      const li = document.createElement("li");
+      li.textContent = `Jugador: ${id}`;
+      playerList.appendChild(li);
+    });
+  });
+</script>
+
+  <div id="waiting-room">
+  <h2>Sala de espera</h2>
+  <p>Jugadores conectados:</p>
+  <ul id="player-list"></ul>
+</div>
+
+</body>
 </html>

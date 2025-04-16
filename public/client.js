@@ -1,6 +1,11 @@
 const socket = io();
 let playerName = '';
 
+// Mostrar pantalla de nombre al cargar
+window.onload = () => {
+  document.getElementById('nameScreen').style.display = 'block';
+};
+
 function startGame() {
   playerName = document.getElementById('nameInput').value.trim();
   if (!playerName) return alert('Escribe un nombre');

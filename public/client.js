@@ -1,36 +1,37 @@
 const socket = io();
-let playerId = null;
 let playerName = '';
-let clickCount = 0;
 
-function registerName() {
-  const input = document.getElementById('nameInput');
-  playerName = input.value.trim();
-  if (playerName) {
-    socket.emit('register', playerName);
-  }
+function startGame() {
+  playerName = document.getElementById('nameInput').value.trim();
+  if (!playerName) return alert('Escribe un nombre');
+
+  socket.emit('newPlayer', playerName);
+
+  document.getElementById('nameScreen').style.display = 'none';
+  document.getElementById('gameScreen').style.display = 'block';
+  document.getElementById('playerName').textContent = playerName;
 }
 
 function sendClick() {
-  if (playerName) {
-    clickCount++;
-    document.getElementById('clicksDisplay').innerText = `Clics: ${clickCount}`;
-    socket.emit('click');
-  }
+  socket.emit('click');
 }
 
-function showRanking() {
-  socket.emit('requestRanking');
-}
+socket.on('updateCount', count => {
+  document.getElementById('clickCount').textContent = count;
+});
 
-socket.on('rankingData', (ranking) => {
+socket.on('updateRanking', ranking => {
   const container = document.getElementById('ranking');
   container.innerHTML = '<h3>Ranking:</h3>';
-  const list = document.createElement('ol');
-  ranking.forEach(entry => {
-    const item = document.createElement('li');
-    item.textContent = `${entry.name}: ${entry.clicks} clics`;
-    list.appendChild(item);
+  ranking.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'player';
+    div.textContent = `${p.name}: ${p.count}`;
+    container.appendChild(div);
   });
-  container.appendChild(list);
 });
+
+function toggleRanking() {
+  const r = document.getElementById('ranking');
+  r.style.display = r.style.display === 'none' ? 'block' : 'none';
+}

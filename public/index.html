@@ -2,22 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Juego Multijugador</title>
   <style>
-    body { font-family: sans-serif; text-align: center; }
-    canvas { border: 1px solid black; display: block; margin: 20px auto; }
+    body { font-family: sans-serif; text-align: center; background: #111; color: #fff; }
+    #nameScreen, #gameScreen { display: none; }
     #ranking { margin-top: 20px; }
+    .player { margin: 5px 0; }
+    button { padding: 10px; font-size: 1rem; margin: 10px; }
   </style>
 </head>
 <body>
-  <h1>Juego Multijugador</h1>
-  <input type="text" id="nameInput" placeholder="Escribe tu nombre" />
-  <button onclick="registerName()">Unirse</button>
-  <p id="clicksDisplay">Clics: 0</p>
-  <button onclick="sendClick()">¡Clic!</button>
-  <button onclick="showRanking()">Ver ranking</button>
-  <div id="ranking"></div>
-
+  <div id="nameScreen">
+    <h1>Ingresa tu nombre</h1>
+    <input id="nameInput" type="text" placeholder="Tu nombre" />
+    <button onclick="startGame()">Entrar</button>
+  </div>
+  <div id="gameScreen">
+    <h1>Hola, <span id="playerName"></span>!</h1>
+    <h2>Contador de clics: <span id="clickCount">0</span></h2>
+    <button onclick="sendClick()">¡Clic!</button>
+    <div>
+      <button onclick="toggleRanking()">Mostrar Ranking</button>
+      <div id="ranking" style="display:none;"></div>
+    </div>
+  </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
 </body>

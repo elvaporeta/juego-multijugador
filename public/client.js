@@ -1,13 +1,10 @@
 const socket = io();
 let playerName = '';
-
-// Mostrar pantalla de nombre al cargar
-window.onload = () => {
-  document.getElementById('nameScreen').style.display = 'block';
-};
+let clickCount = 0;
 
 function startGame() {
-  playerName = document.getElementById('nameInput').value.trim();
+  const input = document.getElementById('nameInput');
+  playerName = input.value.trim();
   if (!playerName) return alert('Escribe un nombre');
 
   socket.emit('newPlayer', playerName);
@@ -17,26 +14,51 @@ function startGame() {
   document.getElementById('playerName').textContent = playerName;
 }
 
+const socket = io();
+let playerName = '';
+
+function $(id) { return document.getElementById(id); }
+
+function showScreen(id) {
+  document.querySelectorAll('#screens > div').forEach(div => div.style.display = 'none');
+  $(id).style.display = 'block';
+}
+
+function startGame() {
+  const name = $('nameInput').value.trim();
+  if (!name) return alert('Escribe tu nombre');
+  playerName = name;
+  socket.emit('newPlayer', name);
+  $('playerName').textContent = name;
+  showScreen('mainMenu');
+}
+
 function sendClick() {
   socket.emit('click');
 }
 
 socket.on('updateCount', count => {
-  document.getElementById('clickCount').textContent = count;
+  $('clickCount').textContent = count;
 });
 
 socket.on('updateRanking', ranking => {
-  const container = document.getElementById('ranking');
-  container.innerHTML = '<h3>Ranking:</h3>';
+  const r = $('ranking');
+  r.innerHTML = '<h3>Ranking:</h3>';
   ranking.forEach(p => {
     const div = document.createElement('div');
-    div.className = 'player';
     div.textContent = `${p.name}: ${p.count}`;
-    container.appendChild(div);
+    r.appendChild(div);
   });
 });
 
 function toggleRanking() {
-  const r = document.getElementById('ranking');
+  const r = $('ranking');
   r.style.display = r.style.display === 'none' ? 'block' : 'none';
+}
+
+function showGame(game) {
+  showScreen(game + 'Game');
+  if (game === 'dino') startDinoGame();
+  if (game === 'miner') startMinerGame();
+  if (game === 'fight') startFightGame();
 }

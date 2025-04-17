@@ -2,32 +2,42 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Juego Multijugador</title>
   <style>
-    body { font-family: sans-serif; text-align: center; background: #111; color: #fff; }
-    #nameScreen, #gameScreen { display: none; }
-    #ranking { margin-top: 20px; }
-    .player { margin: 5px 0; }
-    button { padding: 10px; font-size: 1rem; margin: 10px; }
+    body { margin: 0; font-family: sans-serif; background: #111; color: #fff; text-align: center; }
+    #screens > div { display: none; padding: 20px; }
+    button { padding: 10px 20px; margin: 10px; font-size: 1rem; }
   </style>
 </head>
 <body>
-  <div id="nameScreen">
-    <h1>Ingresa tu nombre</h1>
-    <input id="nameInput" type="text" placeholder="Tu nombre" />
-    <button onclick="startGame()">Entrar</button>
-  </div>
-  <div id="gameScreen">
-    <h1>Hola, <span id="playerName"></span>!</h1>
-    <h2>Contador de clics: <span id="clickCount">0</span></h2>
-    <button onclick="sendClick()">¡Clic!</button>
-    <div>
+  <div id="screens">
+    <div id="nameScreen">
+      <h1>Ingresa tu nombre</h1>
+      <input type="text" id="nameInput" placeholder="Tu nombre" />
+      <button onclick="startGame()">Entrar</button>
+    </div>
+
+    <div id="mainMenu">
+      <h1>Bienvenido, <span id="playerName"></span>!</h1>
+      <h2>Contador de clics: <span id="clickCount">0</span></h2>
+      <button onclick="sendClick()">¡Clic!</button>
       <button onclick="toggleRanking()">Mostrar Ranking</button>
+      <button onclick="showGame('dino')">Minijuego Dinosaurio</button>
+      <button onclick="showGame('miner')">Minijuego Minero</button>
+      <button onclick="showGame('fight')">Minijuego Peleas</button>
       <div id="ranking" style="display:none;"></div>
     </div>
+
+    <div id="dinoGame"></div>
+    <div id="minerGame"></div>
+    <div id="fightGame"></div>
   </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="client.js"></script>
+  <script src="dinoGame.js"></script>
+  <script src="minerGame.js"></script>
+  <script src="fightGame.js"></script>
 </body>
 </html>

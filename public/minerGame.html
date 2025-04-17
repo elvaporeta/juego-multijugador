@@ -1,0 +1,11 @@
+function startMinerGame() {
+  const container = document.getElementById('minerGame');
+  container.innerHTML = '<h2>Minijuego Minero</h2><button onclick="mineGold()">Picar</button><div id="gold">Oro: 0</div><button onclick="backToMenu()">Volver</button>';
+
+  let gold = 0;
+  function mineGold() {
+    gold++;
+    document.getElementById('gold').textContent = 'Oro: ' + gold;
+    socket.emit('click');
+  }
+}

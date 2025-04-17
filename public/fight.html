@@ -1,0 +1,13 @@
+function startFightGame() {
+  const container = document.getElementById('fightGame');
+  container.innerHTML = '<h2>Juego de Peleas</h2><p>(Demo simple)</p><button onclick="backToMenu()">Volver</button>';
+
+  // Aquí se puede implementar físicas, armas, movimiento, etc.
+  socket.emit('click'); // al iniciar cuenta como click
+}
+
+// 🔹 Función común para volver
+function backToMenu() {
+  document.querySelectorAll('#screens > div').forEach(div => div.style.display = 'none');
+  document.getElementById('mainMenu').style.display = 'block';
+}
